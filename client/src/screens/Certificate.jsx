@@ -38,7 +38,7 @@ async loadData(){
   const RDapi = await axios.get(`${process.env.REACT_APP_API_URL}/rdefault`)
   web3.eth.defaultAccount = `${RDapi.data}`;
  
-  //For ganache replace above code
+  // For ganache replace above code
   // const web3 = new Web3('http://localhost:7545');
 
   // web3.eth.defaultAccount = '#Address-of-your-ganache-account';
@@ -109,7 +109,7 @@ async transactionX () {
     `https://ropsten.infura.io/v3/${Rapi.data}`
   ));
 
-  //For ganache replace above code
+  // For ganache replace above code
   // const web3 = new Web3('http://localhost:7545');
 
 
