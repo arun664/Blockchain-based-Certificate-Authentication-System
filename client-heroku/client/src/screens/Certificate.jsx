@@ -3,9 +3,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 
 import Certification from '../abis/Certification.json';
-import Web3 from 'web3';
+import Web3 from 'web3'
 
 import ReactLoading from "react-loading";
+import logo from '../assests/logo.svg'
 
 class Certificate extends Component {
 
@@ -31,24 +32,16 @@ async componentDidUpdate(){
 
 
 async loadData(){
-  const Rapi = await axios.get(`${process.env.REACT_APP_API_URL}/getrapi`)
+  const Rapi = await axios.get('/api/getrapi')
+  //window.alert(Rapi.data)
   var web3 = new Web3(new Web3.providers.HttpProvider(
     `https://ropsten.infura.io/v3/${Rapi.data}`
   ));
-  const RDapi = await axios.get(`${process.env.REACT_APP_API_URL}/rdefault`)
+
+  const RDapi = await axios.get('/api/rdefault')
+  
   web3.eth.defaultAccount = `${RDapi.data}`;
- 
-  //For ganache replace above code
-  // const web3 = new Web3('http://localhost:7545');
-
-  // web3.eth.defaultAccount = '#Address-of-your-ganache-account';
-  // this.setState({account:web3.eth.defaultAccount})
-
-
-
   this.setState({account:web3.eth.defaultAccount})
- 
-
 
   const networkData = Certification.networks[3]
   if(networkData){
@@ -60,9 +53,10 @@ async loadData(){
     else{
     window.alert('Error')
     }
+
     const cert = await this.state.certification.methods.getData(this.props.location.state.id).call()
     //console.log(cert)
-    
+
     const usn = cert[0];
     const name = cert[1];
     const email = cert[2];
@@ -77,7 +71,7 @@ async loadData(){
     const sem7 = cert[5][6]/100;
     const sem8 = cert[5][7]/100;
     const bdate = cert[6].toString()
-    
+
     //changing date format
     const x = bdate[0]+bdate[1]+bdate[2]+bdate[3]
     const y = bdate[4]+bdate[5]
@@ -85,34 +79,29 @@ async loadData(){
 
     //calculating cgpa
     const cgpa = ((parseFloat(sem1)+parseFloat(sem2)+parseFloat(sem3)+parseFloat(sem4)+parseFloat(sem5)+parseFloat(sem6)+parseFloat(sem7)+parseFloat(sem8))/(8.0)).toFixed(2)
-    
+
     //calculating percentage & rank
     const per = (cgpa - 0.75) * 10
     //console.log(per)
     if(per>=70) this.setState({rank:"FCD"})
     else if(per>=60 && per<70) this.setState({rank:"First Class"})
     else this.setState({rank:"Second Class"})
-    
+
     this.setState({usn, name, email, fname, branch, x, y, z, sem1, sem2, sem3, sem4, sem5, sem6, sem7, sem8, cgpa })
-    
+    //console.log(this.state)
 
   //fetching transaction id from mongo
   const id = this.state.usn
-  const tixd = await axios.post(`${process.env.REACT_APP_API_URL}/idfetch`, { id })
+  const tixd = await axios.post('/api/idfetch', { id })
   this.setState({txid:tixd.data.tid})
 }
 
 async transactionX () {
-  const Rapi = await axios.get(`${process.env.REACT_APP_API_URL}/getrapi`)
+  const Rapi = await axios.get('/api/getrapi')
 
   var web3 = new Web3(new Web3.providers.HttpProvider(
     `https://ropsten.infura.io/v3/${Rapi.data}`
   ));
-
-  //For ganache replace above code
-  // const web3 = new Web3('http://localhost:7545');
-
-
   //console.log(this.state.txid)
   const certget = await web3.eth.getTransactionReceipt(this.state.txid)
   //console.log(certget)
@@ -141,16 +130,16 @@ handleSubmit = e => {
 
 }
 
-  render() 
-  {     
+  render()
+  {
       {
-        if(this.state.newcert) 
+        if(this.state.newcert)
         {
           return (
             <div className='min-h-full bg-gray-100 text-gray-900 md:flex justify-center'>
               <ToastContainer />
               <div className='max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex flex-col flex-1'>
-                    <div className="border-b-2 border-indigo-500">    
+                    <div className="border-b-2 border-indigo-500">
                         <div className="m-5 justify-center item-center flex flex-row">
                             <div className="w-26">
                               <img className="w-1/7 h-16 ml-4" src="/static/media/logo.38240f3b.svg" alt="Logo"/>
@@ -162,8 +151,8 @@ handleSubmit = e => {
                           </div>
                         <div>
                     </div>
-                    
-                    
+
+
                     <div className="md:flex max-w-full my-4">
                       <div className="flex flex-col px-4 w-full justify-center items-center text-sm">
                         <div className="flex flex-1 w-full my-1">
@@ -191,7 +180,7 @@ handleSubmit = e => {
                               Date of Birth : {this.state.z}-{this.state.y}-{this.state.x}
                             </span>
                           </div>
-                        </div>  
+                        </div>
                       </div>
                     </div>
 
@@ -254,11 +243,11 @@ handleSubmit = e => {
                           <div className="border-r border-b px-4 py-1 col-span-1 text-center">{this.state.rank}</div>
                       </div>
                     </div>
-                    
+
                     <div className="max-w-full my-4 text-center mb-4">
                         <span className="font-light py-2">Certifies that</span>
                         <h1 className="font-bold py-2">{this.state.name}</h1>
-                        <span className="font-light py-2">has been duly admitted to the degree of</span> 
+                        <span className="font-light py-2">has been duly admitted to the degree of</span>
                         <h1 className="font-bold py-2">BACHELOR OF ENGINEERING</h1>
                         <span className="font-light py-2">in Department of</span>
                         <h1 className="font-bold py-2">{this.state.branch}</h1>
@@ -273,7 +262,7 @@ handleSubmit = e => {
                   <div>
 
               </div>
-            </div>      
+            </div>
 
               <div className='m-0 bg-white shadow flex flex-col justify-center flex-1'>
                 <div className='lg p-6 sm:p-12'>
@@ -286,7 +275,7 @@ handleSubmit = e => {
                       className='w-full flex-1 mt-8 text-indigo-500'
                       onSubmit={this.handleSubmit}
                     >
-                      <div className='mx-auto max-w-xs relative'> 
+                      <div className='mx-auto max-w-xs relative'>
                         <button
                           type='submit'
                           className='mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none'
@@ -313,7 +302,7 @@ handleSubmit = e => {
                         <a
                           className='w-full max-w-xs font-bold shadow-sm rounded-lg py-3
                   bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5'
-                          href='/private'
+                          href='/'
                           target='_self'
                         >
                           <i className='fas fa-sign-in-alt fa 1x w-6  -ml-2 text-indigo-500' />
@@ -324,7 +313,7 @@ handleSubmit = e => {
                   </div>
                 </div>
               </div>
-            </div>  
+            </div>
         )
       }
       else if(this.state.usn == '') {
@@ -337,14 +326,14 @@ handleSubmit = e => {
               <div>
                 <h1>Certificate Doesn't exist!!</h1>
                 <h1>Please check your Certificate ID</h1>
-              </div>            
+              </div>
             </div>
           </div>
           <div className='flex flex-col items-center m-10 p-10 flex-1'>
                         <a
                           className='w-full max-w-xs font-bold shadow-sm rounded-lg py-3
                   bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5'
-                          href='/private'
+                          href='/p'
                           target='_self'
                         >
                           <i className='fas fa-sign-in-alt fa 1x w-6  -ml-2 text-indigo-500' />
