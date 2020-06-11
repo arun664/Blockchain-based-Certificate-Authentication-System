@@ -1,5 +1,5 @@
 # Blockchain-based-Certificate-Authentication-System
-Decentralized Application to verify the authenticity of Academic Certificates
+Decentralized Application to store and verify the authenticity of Academic Certificates
 
 > Built using Ethereum on local blockchain setup and deployed on Ropsten test network.
 
