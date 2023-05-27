@@ -1,3 +1,7 @@
+
+`OUTDATED REPO: CREATE PR IF YOU WISH TO CONTRIBUTE` :shipit:
+
+
 # Blockchain-based-Certificate-Authentication-System
 Decentralized Application to store and verify the authenticity of Academic Certificates
 
